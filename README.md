@@ -31,15 +31,25 @@ b. Virtual DOM
   - this will seupt tailwind.config.js, postcss.config.js
 - edit tailwind.config.js with: 
   ```{```
+
   ``` content: [```
+  
   ``` './src/**/*.{js,jsx,ts,tsx,html}' ```
-  ```]````
+  
+  ```]```
+  
   ``` ...```
+  
   ```}```
+  
   - add tailwind to your main css
+
     ```@tailwind base;```
+  
     ```@tailwind components;```
+  
     ```@tailwind utilities;```
+  
   - Rebuild your FE
 
 
