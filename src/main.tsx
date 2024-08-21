@@ -31,17 +31,17 @@
 // </h1>)
 import React from "react";
 import { createRoot } from "react-dom/client";
-import HomePage from "./pages/home/home.pages";
+// import HomePage from "./pages/home/home.pages";
 import "./assets/global.css";
 import "flowbite";  // flowbite js
+import RoutingConfig from "./config/routing.config";
 
 // import AboutUsPage from "./pages/about-us/about-us.pages";
 
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <HomePage />
-    {/* <AboutUsPage /> */}
+    <RoutingConfig />
   </React.StrictMode>
 )
 // default Export 

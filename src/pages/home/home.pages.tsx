@@ -1,18 +1,17 @@
 import React from "react";
 import "./home.pages.css";
-
 import { HomePageSectionTitle } from "../../components/common/title/home-title.components";
+
 import HomeHeaderMenu from "../../components/header/home-header.compontnets";
 import HomeBannerSlider from "../../components/banner/home-slider.components";
 
 const HomePage: React.FC = () => {
     
     return (<>
-        
-        <HomeHeaderMenu />
+        <HomeHeaderMenu />    
 
-        
         <HomeBannerSlider />
+
 
         {/* Category Section Starts */}
         <div className="bg-teal-300">
