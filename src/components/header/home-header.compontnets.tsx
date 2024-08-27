@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link, NavLink } from "react-router-dom"
 
 export interface UserInterface {
     name: string
@@ -9,9 +10,7 @@ const HomeHeaderMenu = () => {
         document.getElementById('myCartDropdown1')?.classList.toggle("hidden")
     }
 
-    const [user, setUser] = useState<UserInterface>({
-        name: "Sandesh"
-    })
+    const [user, setUser] = useState<UserInterface>()
 
     // state update 
 
@@ -22,22 +21,22 @@ const HomeHeaderMenu = () => {
 
                     <div className="flex items-center space-x-8">
                         <div className="shrink-0">
-                            <a href="#" title="" className="">
+                            <Link to="/" title="" className="">
                                 <img className="block w-auto h-8 dark:hidden" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full-dark.svg" alt="" />
                                 <img className="hidden w-auto h-8 dark:block" src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full-dark.svg" alt="" />
-                            </a>
+                            </Link>
                         </div>
 
                         <ul className="hidden lg:flex items-center justify-start gap-6 md:gap-8 py-3 sm:justify-center">
                             <li>
-                                <a href="/" title="" className="flex text-sm font-medium text-white hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
+                                <NavLink to="/" title="" className="flex text-sm font-medium text-white hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
                                     Home
-                                </a>
+                                </NavLink>
                             </li>
                             <li className="shrink-0">
-                                <a href="/best-seller" title="" className="flex text-sm font-medium text-white hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
+                                <NavLink to="/best-seller" title="" className="flex text-sm font-medium text-white hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
                                     Best Sellers
-                                </a>
+                                </NavLink>
                             </li>
                             <li className="shrink-0">
                                 <a href="/categories" title="" className="flex text-sm font-medium text-white hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
@@ -197,18 +196,27 @@ const HomeHeaderMenu = () => {
                         </button>
 
                         <div id="userDropdown1" className="hidden z-10 w-56 divide-y divide-gray-100 overflow-hidden overflow-y-auto rounded-lg bg-teal-800 antialiased shadow dark:divide-gray-600 dark:bg-gray-700">
-                            <ul className="p-2 text-start text-sm font-medium text-white dark:text-white">
-                                <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> My Account </a></li>
-                                <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> My Orders </a></li>
-                                <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Settings </a></li>
-                                <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Favourites </a></li>
-                                <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Delivery Addresses </a></li>
-                                <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Billing Data </a></li>
-                            </ul>
+                            {
+                                user ? <>
+                                    <ul className="p-2 text-start text-sm font-medium text-white dark:text-white">
+                                        <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> My Account </a></li>
+                                        <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> My Orders </a></li>
+                                        <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Settings </a></li>
+                                        <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Favourites </a></li>
+                                        <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Delivery Addresses </a></li>
+                                        <li><a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Billing Data </a></li>
+                                    </ul>
 
-                            <div className="p-2 text-sm font-medium text-white dark:text-white">
-                                <a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Sign Out </a>
-                            </div>
+                                    <div className="p-2 text-sm font-medium text-white dark:text-white">
+                                        <a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Sign Out </a>
+                                    </div>
+                                </> : <>
+                                    <ul className="p-2 text-start text-sm font-medium text-white dark:text-white">
+                                        <li><NavLink to="/login" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Login </NavLink></li>
+                                        <li><NavLink to="/register" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Register </NavLink></li>
+                                    </ul>
+                                </>
+                            }
                         </div>
 
                         <button type="button" data-collapse-toggle="ecommerce-navbar-menu-1" aria-controls="ecommerce-navbar-menu-1" aria-expanded="false" className="inline-flex lg:hidden items-center justify-center hover:bg-teal-700 rounded-md dark:hover:bg-gray-700 p-2 text-white dark:text-white">

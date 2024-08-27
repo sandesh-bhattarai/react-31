@@ -82,3 +82,13 @@ b. Virtual DOM
 - I = Interface Segrigation Principle (ISP)
 - D = Dependency Inversion Principle (DIP)
 
+
+
+## Form Input 
+- type attributes: 
+  - text, number, email, password, file, date, time, radio, checkbox 
+  - button, submit, reset, url, tel, range, datetime-local, hidden
+
+## Textarea 
+## Select-option 
+## Button tag
