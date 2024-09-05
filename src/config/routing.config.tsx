@@ -7,7 +7,11 @@ import CategoryDetail from "../pages/category/category-detail.page";
 import { HomePageLayout, AdminLayout } from "../pages/layouts";
 import AdminDashboardPage from "../pages/dashboard/admin-dashboard.page";
 
+import "react-toastify/ReactToastify.css"
+import {ToastContainer} from "react-toastify";
+
 import { 
+    ActivateUser,
     LoginPage, 
     RegisterPage
 } from "../pages/auth";
@@ -17,7 +21,9 @@ import {
 // 
 const RoutingConfig = () => {
     return (<>
+        
         <BrowserRouter>
+            <ToastContainer></ToastContainer>
             <Routes>
 
                 <Route path="/" element={<HomePageLayout />}>
@@ -28,6 +34,8 @@ const RoutingConfig = () => {
 
                     <Route path='login' element={<LoginPage />}></Route>
                     <Route path="register" element={<RegisterPage />}></Route>
+                    <Route path="activate/:token" element={<ActivateUser />}></Route>
+
                     <Route path="*" element={<NotFoundPage />} />
                 </Route>
 

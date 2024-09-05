@@ -92,3 +92,14 @@ b. Virtual DOM
 ## Textarea 
 ## Select-option 
 ## Button tag
+
+
+## CRUD 
+- Create
+  - post
+- Read 
+  - get
+- Update 
+  - put / patch
+- Delete
+  - delete 

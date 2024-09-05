@@ -1,12 +1,22 @@
 import { useForm } from "react-hook-form";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
+import { NavLink } from "react-router-dom";
+import axios from "axios";
+import axiosInstance from "../../../config/axios.config";
+import { toast } from "react-toastify";
+import authSvc from "../auth.service";
+
+
+export type CredentialType = {
+    email: string, 
+    password: string
+}
 
 const LoginPage = () => {
     const loginDTO = Yup.object({
-        username: Yup.string().email().required(), 
+        email: Yup.string().email().required(), 
         password: Yup.string().min(8).required()
     })
 
@@ -15,9 +25,13 @@ const LoginPage = () => {
     })
 
 
-    const submitEvent = (credentials: any) => {
-        // we make api call for login action 
-        console.log(credentials);
+    const submitEvent =async (credentials: CredentialType) => {
+        try{
+            const response = await authSvc.login(credentials);
+            console.log(response);
+        }catch(exception: any) {
+            toast.error(exception.data.message);
+        }
     }
 
     return (<>
@@ -36,16 +50,16 @@ const LoginPage = () => {
                         <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit(submitEvent)}>
                             <div>
                                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                                <input {...register("username")} type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-teal-600 focus:border-teal-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com"/>
+                                <input {...register("email")} type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-teal-600 focus:border-teal-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com"/>
                                 <span className="text-red-800">
                                     {
-                                        errors?.username?.message
+                                        errors?.email?.message
                                     }
                                 </span>
                             </div>
                             <div>
                                 <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                                <input {...register("password")}  type="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-teal-600 focus:border-teal-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                                <input {...register("password")}  type="password" id="password" placeholder="••••••••" className={` border bg-gray-50  ${errors?.password?.message ? 'border-red-300 focus:ring-red-600 focus:border-red-600' : "border-gray-300 focus:ring-teal-600 focus:border-teal-600"} text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`} />
                                 <span className="text-red-800">
                                     {
                                         errors?.password?.message
@@ -57,7 +71,7 @@ const LoginPage = () => {
                             </div>
                             <button type="submit" className="w-full text-white bg-teal-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-teal-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                Don’t have an account yet? <a href="#" className="font-medium text-teal-600 hover:underline dark:text-primary-500">Sign up</a>
+                                Don’t have an account yet? <NavLink to="/register" className="font-medium text-teal-600 hover:underline dark:text-primary-500">Sign up</NavLink>
                             </p>
                         </form>
                     </div>
