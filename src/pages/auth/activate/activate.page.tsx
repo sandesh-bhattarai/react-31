@@ -37,6 +37,9 @@ const ActivateUser = () => {
                     }
                     
                 });
+            } else {
+                toast.success("Error activating your account...")
+                navigate('/')
             }
         } finally {
             setLoading(false)
@@ -46,6 +49,23 @@ const ActivateUser = () => {
     useEffect(() => {
         activateUser()    
     },[])
+
+
+    const loginCheck =async () => {
+        try {
+            const {data} = await authSvc.getLoggedInuser()
+            // console.log("Data:", data)
+            toast.info("You are already loggedIn.")
+            navigate("/"+data.result.role)
+        } catch(exception){
+            //
+            console.log(exception)
+        }
+    }
+    useEffect(() => {
+        // login check 
+        loginCheck()
+    }, [])
     return (<>
         {
             loading ? <>

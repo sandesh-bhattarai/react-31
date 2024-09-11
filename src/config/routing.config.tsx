@@ -8,46 +8,64 @@ import { HomePageLayout, AdminLayout } from "../pages/layouts";
 import AdminDashboardPage from "../pages/dashboard/admin-dashboard.page";
 
 import "react-toastify/ReactToastify.css"
-import {ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
-import { 
+import {
     ActivateUser,
-    LoginPage, 
+    LoginPage,
     RegisterPage
 } from "../pages/auth";
+import { AuthProvider } from "../context/auth.context";
+import PermissionChecker from "./permission.config";
 
+import { BannerCreatePage, BannerListPage } from "../pages/banners";
 
 // login, register, product-list 
 // 
 const RoutingConfig = () => {
+    
     return (<>
-        
+    <AuthProvider>
         <BrowserRouter>
             <ToastContainer></ToastContainer>
-            <Routes>
+                <Routes>
 
-                <Route path="/" element={<HomePageLayout />}>
-                    <Route index element={<HomePage />}></Route>
-                    <Route path="best-seller" element={<BestSellerPage />} />
+                    <Route path="/" element={<HomePageLayout />}>
+                        <Route index element={<HomePage />}></Route>
+                        <Route path="best-seller" element={<BestSellerPage />} />
 
-                    <Route path="category-detail/:slug" element={<CategoryDetail />}></Route>
+                        <Route path="category-detail/:slug" element={<CategoryDetail />}></Route>
 
-                    <Route path='login' element={<LoginPage />}></Route>
-                    <Route path="register" element={<RegisterPage />}></Route>
-                    <Route path="activate/:token" element={<ActivateUser />}></Route>
+                        <Route path='login' element={<LoginPage />}></Route>
+                        <Route path="register" element={<RegisterPage />}></Route>
+                        <Route path="activate/:token" element={<ActivateUser />}></Route>
 
-                    <Route path="*" element={<NotFoundPage />} />
-                </Route>
+                        <Route path="*" element={<NotFoundPage />} />
+                    </Route>
 
-                <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<AdminDashboardPage />} />
+                    <Route path="/admin" element={<PermissionChecker allowedBy="admin">
+                            <AdminLayout />
+                        </PermissionChecker>}>
+                        <Route index element={<AdminDashboardPage />} />
 
-                    <Route path="*" element={<NotFoundPage />} />
-                </Route>
+                        <Route path="banner" element={<BannerListPage />} />
+                        <Route path="banner/create" element={<BannerCreatePage />} />
+                        <Route path="*" element={<NotFoundPage />} />
+                    </Route>
 
-                
-            </Routes>
-        </BrowserRouter>
+                    <Route path="/seller" element={<PermissionChecker allowedBy="seller">
+                            <AdminLayout />
+                        </PermissionChecker>}>
+                        <Route index element={<AdminDashboardPage />} />
+
+                        <Route path="*" element={<NotFoundPage />} />
+                    </Route>
+
+
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
+
     </>)
 }
 

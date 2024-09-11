@@ -22,7 +22,10 @@ axiosInstance.interceptors.response.use(
     (exception) => {
         if(+exception.status === 401) {
             // redirect to login page notify 
+            // refresh ===> 401 
             toast.error("Please login first");
+            localStorage.removeItem("token")
+            localStorage.removeItem("refresh")
             window.location.href = "/login"
         } else if(+exception.status === 403) {
             // 

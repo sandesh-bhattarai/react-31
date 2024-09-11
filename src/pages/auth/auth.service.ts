@@ -5,11 +5,15 @@ import { RegisterDataType } from "./register/register.page";
 class AuthService extends BaseHttpService{
     login = async(data: CredentialType) => {
         try {
-            const response = await this.postRequest(
+            const {data: response} = await this.postRequest(
                 import.meta.env.VITE_API_VERSION+'/auth/login',
                 data
             );
+            
+            localStorage.setItem('token',response.result.token.access);
+            localStorage.setItem('refresh',response.result.token.refresh);
 
+            return response;
         } catch(exception) {
             throw exception;
         }
@@ -48,6 +52,15 @@ class AuthService extends BaseHttpService{
             return res;
         } catch(exception) {
             throw exception;
+        }
+    }
+
+    getLoggedInuser = async() => {
+        try {
+            const res = await this.getRequest(import.meta.env.VITE_API_VERSION+'/auth/me',{auth:true})
+            return res;
+        } catch(exception) {
+            throw exception
         }
     }
 }

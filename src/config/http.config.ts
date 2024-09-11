@@ -17,6 +17,17 @@ abstract class BaseHttpService {
             }
         }
 
+        if(config && config.hasOwnProperty('auth'))  {
+            const token = localStorage.getItem('token') || null;
+            if(!token) {
+                throw {status: 401, message: "Login Required"}
+            }
+            this.#headers = {
+                ...this.#headers,
+                "Authorization": "Bearer "+token
+            }
+        }
+
     }
 
     postRequest = async(url: string, data: any = {}, config: AxiosConfigType = {}) => {

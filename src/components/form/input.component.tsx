@@ -24,7 +24,9 @@ export type TextInputProps ={
 export type FileInputProps = {
     name: string, 
     setValue: any,
-    multiple?: boolean
+    multiple?: boolean,
+    thumbClass?: string,
+    thumbsize?: string
 }
 
 export type TextAreaProps = {
@@ -122,7 +124,7 @@ export const TextAreaInputComponent = ({
     </>)
 }
 
-export const FileInputComponent = ({name, setValue, multiple =false}: FileInputProps) => {
+export const FileInputComponent = ({name, setValue, multiple =false, thumbClass='rounded-full', thumbsize='200x200'}: FileInputProps) => {
     const [thumb, setThumb]= useState<any>()
 
     const handleChange = (e: any) => {
@@ -148,8 +150,8 @@ export const FileInputComponent = ({name, setValue, multiple =false}: FileInputP
                 !multiple ? <>
                     <div className="w-1/4 ms-2">
                         {
-                            thumb && typeof thumb === 'object' ? <img className="rounded-full w-48" src={URL.createObjectURL(thumb)} /> : <>
-                            <img src='https://placehold.co/200x200?text=No+image' className="rounded-full"/>
+                            thumb && typeof thumb === 'object' ? <img className={`${thumbClass} w-full`} src={URL.createObjectURL(thumb)} /> : <>
+                            <img src={`https://placehold.co/${thumbsize}?text=No+image`} className={thumbClass}/>
                             </>
                         }
                     </div>
@@ -163,7 +165,7 @@ export const FileInputComponent = ({name, setValue, multiple =false}: FileInputP
                 {
                     thumb.map((image: any, i: number) =>(
                         <div className="w-1/3 me-3 mb-3" key={i}>
-                            <img className="rounded-full w-48" src={URL.createObjectURL(image)} />
+                            <img className={`${thumbClass} w-full`} src={URL.createObjectURL(image)} />
                         </div>
                     ))
                 }

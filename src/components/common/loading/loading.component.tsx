@@ -11,7 +11,7 @@ export enum LoadingSize {
 const LoadingComponent = ({size =LoadingSize.MD}: {size?: LoadingSize}) => {
     return (<>
         
-                <Spinner size={size} aria-label="Center-aligned spinner example" />
+        <Spinner size={size} aria-label="Center-aligned spinner example" />
         
     </>)
 }

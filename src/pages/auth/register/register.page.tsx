@@ -7,8 +7,9 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import authSvc from "../auth.service";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { setErrorMsg } from "../../../config/helpers.config";
+import AuthContext from "../../../context/auth.context";
 
 
 export type RegisterDataType = {
@@ -63,6 +64,25 @@ const RegisterPage = () => {
             setLoading(false);
         }
     }
+    const auth: any = useContext(AuthContext);
+    
+    const loginCheck =async () => {
+        try {
+            if(auth.loggedInUser) {
+                toast.info("You are already loggedIn.")
+                navigate("/"+auth.loggedInUser.role)    
+            }
+        } catch(exception){
+            //
+            console.log(exception)
+        }
+    }
+    useEffect(() => {
+        const token = localStorage.getItem('token') || null
+        if(token) {
+            loginCheck()
+        }
+    }, [auth])
     return (<>
         <section className="bg-white">
             <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
