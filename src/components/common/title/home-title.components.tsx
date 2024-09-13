@@ -15,3 +15,11 @@ export const HomePageSectionTitle = ({title, link}: HomeSectionTitleProps) => {
         </div>
     </>)
 }
+
+export const AdminPageTitle = ({children}: {children: any}) => {
+    return (<>
+        <h1 className="text-teal-900 font-bold text-4xl mb-5">
+            {children}    
+        </h1>
+    </>)
+}

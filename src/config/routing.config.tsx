@@ -18,7 +18,7 @@ import {
 import { AuthProvider } from "../context/auth.context";
 import PermissionChecker from "./permission.config";
 
-import { BannerCreatePage, BannerListPage } from "../pages/banners";
+import { BannerCreatePage, BannerEditPage, BannerListPage } from "../pages/banners";
 
 // login, register, product-list 
 // 
@@ -50,6 +50,7 @@ const RoutingConfig = () => {
 
                         <Route path="banner" element={<BannerListPage />} />
                         <Route path="banner/create" element={<BannerCreatePage />} />
+                        <Route path="banner/:id/edit" element={<BannerEditPage />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Route>
 

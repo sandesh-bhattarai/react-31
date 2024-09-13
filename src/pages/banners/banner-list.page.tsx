@@ -1,140 +1,164 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { FaPlus, FaSearch } from "react-icons/fa"
+import { useCallback, useEffect, useState } from "react"
+import { FaGreaterThan, FaLessThan, FaPen, FaPlus, FaSearch, FaTrash } from "react-icons/fa"
 import { NavLink } from "react-router-dom"
 import { TableSkeleton } from "../../components/table/table-skeleton.component";
+import { toast } from "react-toastify";
+import bannerSvc from "./banner.service";
+import { formatToYMD } from "../../config/helpers.config";
+
+import { PaginationProps } from "../../config/http.config";
+import TablePagination, { PaginationPageType } from "../../components/table/table-pagination.component";
+import SearchFormField from "../../components/form/search.component";
+import AdminPageButton from "../../components/common/links/admin-page-button.component";
+import { AdminPageTitle } from "../../components/common/title/home-title.components";
+import TableHeaderComponent from "../../components/table/table-header.component";
+import TableActionButtons from "../../components/table/table-buttons.component";
 
 const BannerListPage = () => {
     const [loading, setLoading] = useState(true);
     const [bannerData, setBannerData] = useState<any>();
+    const [search, setSearch] = useState<string>();
 
-    const loadBanner = useCallback(async() => {
-        // api call 
+    const [pagination, setPagination] = useState({
+        page: 1,
+        limit: 15,
+        totalPages: 1,
+        total: 0
+    })
+
+    const loadBanner = useCallback(async ({page= 1,limit=15, search=null }: PaginationProps) => {
+        setLoading(true)
+        try {
+            const response = await bannerSvc.listAllData({
+                page: page,
+                limit: limit, 
+                search: search
+            });
+            setBannerData(response.data.result)
+            setPagination({
+                page: +response.data.meta.page,
+                limit: +response.data.meta.limit,
+                totalPages: +response.data.meta.totalpages,
+                total: +response.data.meta.total,
+            })
+            setLoading(false)
+        } catch (exception: any) {
+            toast.error("Banner cannot be fetched at this moment.")
+        }
     }, [])
 
     useEffect(() => {
-        loadBanner()
+        loadBanner({page: 1, limit: 15})
     }, [])
+
+    useEffect(() => {
+        
+            const timeout = setTimeout(() => {
+                loadBanner({
+                    page: 1, 
+                    limit: pagination.limit, 
+                    search: search
+                })
+            }, 1500)
+
+            return () => clearTimeout(timeout)
+        
+    }, [search])
+
+
+    const deleteBanner = async(id: string) => {
+        try {
+            setLoading(true);
+            await bannerSvc.deleteBannerById(id)
+            toast.success("Banner deleted successfully.")
+            loadBanner({page: 1, limit: 15})
+            setLoading(false);
+        } catch(exception) {
+            console.log(exception);
+            toast.error("Error deleting Banner")
+        }
+    }
+
     return (<>
         <section className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 mt-5">
             <div className="mx-auto w-full">
+
                 
-                <h1 className="text-teal-900 font-bold text-4xl mb-5">
-                    Banner Listing Page
-                </h1>
+                <AdminPageTitle> Banner Page </AdminPageTitle>
+                
 
                 <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                     <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                         <div className="w-full md:w-1/2">
-                            <form className="flex items-center">
-                                <label htmlFor="simple-search" className="sr-only">Search</label>
-                                <div className="relative w-full">
-                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <FaSearch />
-                                    </div>
-                                    <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-teal-500 dark:focus:border-primary-500" placeholder="Search" required />
-                                </div>
-                            </form>
+                            <SearchFormField  setSearch={setSearch} />
                         </div>
-                        <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <NavLink to="/admin/banner/create" className="flex items-center justify-center text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-teal-600 dark:hover:bg-teal-700 focus:outline-none dark:focus:ring-teal-800">
-                                <FaPlus />&nbsp;Add Banner
-                            </NavLink>
-
-                        </div>
+                        <AdminPageButton url="/admin/banner/create" label="Add Banner"/>
                     </div>
+
                     <div className="overflow-x-auto my-3">
-                        
-                                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                <thead className="text-xs text-white uppercase bg-gray-800 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" className="px-4 py-3">Title</th>
-                                        <th scope="col" className="px-4 py-3">Link</th>
-                                        <th scope="col" className="px-4 py-3">Image</th>
-                                        <th scope="col" className="px-4 py-3">Date</th>
-                                        <th scope="col" className="px-4 py-3">Status</th>
-                                        <th scope="col" className="px-4 py-3">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        loading ? <>
-                                            <TableSkeleton rows={3} col={6}/>
-                                        </> : <>
-                                            <tr className="border-b dark:border-gray-700">
-                                                <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Apple iMac 27&#34;</th>
-                                                <td className="px-4 py-3">PC</td>
-                                                <td className="px-4 py-3">Apple</td>
-                                                <td className="px-4 py-3">300</td>
-                                                <td className="px-4 py-3">$2999</td>
-                                                <td className="px-4 py-3 flex items-center justify-end">
-                                                    <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
-                                                        <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                        </svg>
-                                                    </button>
-                                                    <div id="apple-imac-27-dropdown" className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                                        <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
-                                                            <li>
-                                                                <a href="#" className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                                            </li>
-                                                        </ul>
-                                                        <div className="py-1">
-                                                            <a href="#" className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </>
-                                    }
-                                </tbody>
-                            </table>
+
+                        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead className="text-xs text-white uppercase bg-gray-800 dark:bg-gray-700 dark:text-gray-400">
+                                <TableHeaderComponent fields={["Title", "Link", "Image", "Date","Status","Actions"]} />
+                            </thead>
+                            <tbody>
+                                {
+                                    loading ? <>
+                                        <TableSkeleton rows={3} col={6} />
+                                    </> : <>
+                                        {
+                                            bannerData && bannerData.length ? <>
+                                                {
+                                                    bannerData.map((row: any, index: number) => (
+                                                        <tr key={index} className="border-b dark:border-gray-700">
+                                                            <th scope="row" className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{row.name}</th>
+                                                            <td className="px-4 py-3">
+                                                                <a href={row.link} className="hover:underline text-teal-600" target="_banner">
+                                                                    {row.link}
+                                                                </a>
+                                                            </td>
+                                                            <td className="px-4 py-3">
+                                                                <img src={row.image} className="w-32"></img>
+                                                            </td>
+                                                            <td className="px-4 py-3">{formatToYMD(row.startDate) + ' to ' + formatToYMD(row.endDate)}</td>
+                                                            <td className="px-4 py-3">
+                                                                <span className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded ${row.status === 'active' ? "bg-green-900" : 'bg-red-900'} text-white`}>
+                                                                    {row.status === 'active' ? "Publish" : "Unpublish"}
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-4 py-3 flex ">
+                                                                <TableActionButtons 
+                                                                    editUrl={'/admin/banner/'+row._id+'/edit'}
+                                                                    id={row._id}
+                                                                    deleteAction={deleteBanner}
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                                }
+                                            </> : <>
+                                                <tr className="border-b dark:border-gray-700">
+                                                    <td colSpan={6} className="px-4 py-3 text-center">No data found</td>
+                                                </tr>
+                                            </>
+                                        }
+                                    </>
+                                }
+                            </tbody>
+                        </table>
                     </div>
                     {
                         loading ? <></> : <>
-                        <nav className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-                        <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                            Showing
-                            <span className="font-semibold text-gray-900 dark:text-white">1-10</span>
-                            of
-                            <span className="font-semibold text-gray-900 dark:text-white">1000</span>
-                        </span>
-                        <ul className="inline-flex items-stretch -space-x-px">
-                            <li>
-                                <a href="#" className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <span className="sr-only">Previous</span>
-                                    <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                    </svg>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                            </li>
-                            <li>
-                                <a href="#" className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                            </li>
-                            <li>
-                                <a href="#" aria-current="page" className="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-teal-50 border border-primary-300 hover:bg-teal-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                            </li>
-                            <li>
-                                <a href="#" className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                            </li>
-                            <li>
-                                <a href="#" className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-                            </li>
-                            <li>
-                                <a href="#" className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                    <span className="sr-only">Next</span>
-                                    <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                    </svg>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                            <TablePagination 
+                                pagination={{
+                                    total: pagination.total,
+                                    page: pagination.page,
+                                    totalPages: pagination.totalPages,
+                                    limit: pagination.limit
+                                } as PaginationPageType}
+                                search={search}
+                                apiCaller={loadBanner}
+                            />
                         </>
                     }
                 </div>

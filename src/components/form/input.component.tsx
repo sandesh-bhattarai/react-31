@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useController } from "react-hook-form"
 import Select from "react-select"
 export enum InputTypeEnum {
@@ -26,7 +26,8 @@ export type FileInputProps = {
     setValue: any,
     multiple?: boolean,
     thumbClass?: string,
-    thumbsize?: string
+    thumbsize?: string,
+    thumbnail?: any
 }
 
 export type TextAreaProps = {
@@ -124,7 +125,7 @@ export const TextAreaInputComponent = ({
     </>)
 }
 
-export const FileInputComponent = ({name, setValue, multiple =false, thumbClass='rounded-full', thumbsize='200x200'}: FileInputProps) => {
+export const FileInputComponent = ({name, setValue, multiple =false, thumbClass='rounded-full', thumbsize='200x200', thumbnail=null}: FileInputProps) => {
     const [thumb, setThumb]= useState<any>()
 
     const handleChange = (e: any) => {
@@ -136,6 +137,13 @@ export const FileInputComponent = ({name, setValue, multiple =false, thumbClass=
             setThumb(e.target.files[0])
         }
     }
+
+    useEffect(() => {
+        if(thumbnail) {
+            setThumb(thumbnail)
+        }
+    }, [thumbnail])
+
     return (<>
         <div className="flex">
             <div className={`${multiple ? 'w-full' : 'w-3/4'}`}>
@@ -151,7 +159,11 @@ export const FileInputComponent = ({name, setValue, multiple =false, thumbClass=
                     <div className="w-1/4 ms-2">
                         {
                             thumb && typeof thumb === 'object' ? <img className={`${thumbClass} w-full`} src={URL.createObjectURL(thumb)} /> : <>
-                            <img src={`https://placehold.co/${thumbsize}?text=No+image`} className={thumbClass}/>
+                            
+                            {thumb && typeof thumb === 'string' ? <>
+                                <img className={`${thumbClass} w-full`} src={thumb} />
+                            </> : <img src={`https://placehold.co/${thumbsize}?text=No+image`} className={thumbClass}/>}
+                        
                             </>
                         }
                     </div>

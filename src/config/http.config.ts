@@ -1,12 +1,22 @@
 import axiosInstance from "./axios.config"
 
+
+export type PaginationProps = {
+    page: number, 
+    limit: number,
+    search?: string | null
+}
+
+
 export type AxiosConfigType = {
     auth?: boolean,
-    file?: boolean
+    file?: boolean,
+    params?: PaginationProps
 }
 
 abstract class BaseHttpService {
     #headers = {}
+    #params = {}
 
     getHeaders = (config: AxiosConfigType) => {
         
@@ -28,6 +38,13 @@ abstract class BaseHttpService {
             }
         }
 
+        // params 
+        if(config && config.hasOwnProperty("params")) {
+            this.#params ={
+                ...this.#params,
+                ...config.params
+            }
+        }
     }
 
     postRequest = async(url: string, data: any = {}, config: AxiosConfigType = {}) => {
@@ -37,6 +54,9 @@ abstract class BaseHttpService {
             const response = await axiosInstance.post(url, data, {
                 headers: {
                     ...this.#headers
+                },
+                params: {
+                    ...this.#params
                 }
             })
             return response;
@@ -51,6 +71,9 @@ abstract class BaseHttpService {
             const response = await axiosInstance.get(url,{
                 headers: {
                     ...this.#headers
+                },
+                params: {
+                    ...this.#params
                 }
             })
             return response;
@@ -65,6 +88,9 @@ abstract class BaseHttpService {
             const response = await axiosInstance.put(url, data, {
                 headers: {
                     ...this.#headers
+                },
+                params: {
+                    ...this.#params
                 }
             })
             return response;
@@ -79,6 +105,9 @@ abstract class BaseHttpService {
             const response = await axiosInstance.patch(url, data, {
                 headers: {
                     ...this.#headers
+                },
+                params: {
+                    ...this.#params
                 }
             })
             return response;
@@ -93,6 +122,9 @@ abstract class BaseHttpService {
             const response = await axiosInstance.delete(url,{
                 headers: {
                     ...this.#headers
+                },
+                params: {
+                    ...this.#params
                 }
             })
             return response;

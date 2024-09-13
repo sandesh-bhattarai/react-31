@@ -39,7 +39,7 @@ export const formatToYMD = (date: Date | string) => {
 	const dateObj = new Date(date);
 	// YYYY-MM-DD
 	const year = dateObj.getFullYear()		// YYYY
-	const month = `${dateObj.getMonth()}`.padStart(2 , '0')			// 1-12 
+	const month = `${dateObj.getMonth()+1}`.padStart(2 , '0')			// 1-12 
 	const day = `${dateObj.getDate()}`.padStart(2, '0')				// 1-31
 	
 	return `${year}-${month}-${day}`;
