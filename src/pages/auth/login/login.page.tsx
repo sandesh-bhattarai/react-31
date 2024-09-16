@@ -38,7 +38,11 @@ const LoginPage = () => {
         setLoading(true);
         try{
             const response = await authSvc.login(credentials);
+            // redirect content undefined
             toast.success(response.message)
+            auth.setLoggedInUser(response.result.detail);
+            // auth.loggedInUser = response.result.detail;
+
             navigate('/'+response.result.detail.role)
         }catch(exception: any) {
             toast.error(exception.data.message);

@@ -19,6 +19,7 @@ import { AuthProvider } from "../context/auth.context";
 import PermissionChecker from "./permission.config";
 
 import { BannerCreatePage, BannerEditPage, BannerListPage } from "../pages/banners";
+import { BrandCreatePage, BrandEditPage, BrandListPage } from "../pages/brands";
 
 // login, register, product-list 
 // 
@@ -51,16 +52,24 @@ const RoutingConfig = () => {
                         <Route path="banner" element={<BannerListPage />} />
                         <Route path="banner/create" element={<BannerCreatePage />} />
                         <Route path="banner/:id/edit" element={<BannerEditPage />} />
+
+                        <Route path="brand" element={<BrandListPage />} />
+                        <Route path="brand/create" element={<BrandCreatePage />} />
+                        <Route path="brand/:id/edit" element={<BrandEditPage />} />
+
                         <Route path="*" element={<NotFoundPage />} />
                     </Route>
 
+                    
+                    {/* 
+                    you have to prepare separate layout
                     <Route path="/seller" element={<PermissionChecker allowedBy="seller">
                             <AdminLayout />
                         </PermissionChecker>}>
                         <Route index element={<AdminDashboardPage />} />
 
                         <Route path="*" element={<NotFoundPage />} />
-                    </Route>
+                    </Route> */}
 
 
                 </Routes>

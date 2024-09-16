@@ -1,10 +1,10 @@
 import BaseHttpService, {PaginationProps} from "../../config/http.config";
 
-class BannerService extends BaseHttpService {
-    createBanner = async (data: any) => {
+class BrandService extends BaseHttpService {
+    createBrand = async (data: any) => {
         try {
             const response = await this.postRequest(
-                `${import.meta.env.VITE_API_VERSION}/banner`,
+                `${import.meta.env.VITE_API_VERSION}/brand`,
                 data, 
                 {auth: true, file: true}
             )
@@ -18,7 +18,7 @@ class BannerService extends BaseHttpService {
         // limit, current, search
         try {
             const response = await this.getRequest(
-                `${import.meta.env.VITE_API_VERSION}/banner`,       // /api/v1/banner?page=1&limit=10&search=keyword
+                `${import.meta.env.VITE_API_VERSION}/brand`,       // /api/v1/brand?page=1&limit=10&search=keyword
                 {auth: true, params: {page, limit, search}}        // {auth: true, params: {page: 1, search: keyword, limit: 10}}
             )
             return response;
@@ -27,10 +27,10 @@ class BannerService extends BaseHttpService {
         }
     }
 
-    deleteBannerById =  async(id: string) => {
+    deleteBrandById =  async(id: string) => {
         try {
             return await this.deleteRequest(
-                `${import.meta.env.VITE_API_VERSION}/banner/${id}`,
+                `${import.meta.env.VITE_API_VERSION}/brand/${id}`,
                 {auth: true}
             )
         } catch(exception) {
@@ -41,7 +41,7 @@ class BannerService extends BaseHttpService {
     getDetailById = async(id: string) => {
         try {
             return await this.getRequest(
-                `${import.meta.env.VITE_API_VERSION}/banner/${id}`,
+                `${import.meta.env.VITE_API_VERSION}/brand/${id}`,
                 {auth: true}
             )
         } catch(error) {
@@ -49,10 +49,10 @@ class BannerService extends BaseHttpService {
         }
     }
 
-    editBanner = async(id: string, data: any) => {
+    editBrand = async(id: string, data: any) => {
         try {
             return await this.putRequest(
-                `${import.meta.env.VITE_API_VERSION}/banner/${id}`,
+                `${import.meta.env.VITE_API_VERSION}/brand/${id}`,
                 data, 
                 {auth: true, file: true}
             )
@@ -64,12 +64,12 @@ class BannerService extends BaseHttpService {
     getForHome = async() => {
         try {
             return await this.getRequest(
-                `${import.meta.env.VITE_API_VERSION}/banner/list-home`
+                `${import.meta.env.VITE_API_VERSION}/brand/list-home`
             )
         } catch(exception) {
             throw exception
         }
     }
 }
-const bannerSvc = new BannerService()
-export default bannerSvc;
+const brandSvc = new BrandService()
+export default brandSvc;

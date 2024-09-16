@@ -1,16 +1,29 @@
 import { useContext } from "react"
-import { Link, NavLink } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import AuthContext from "../../context/auth.context"
+import { toast } from "react-toastify";
+
+const toggleCartView = () => {
+    document.getElementById('myCartDropdown1')?.classList.toggle("hidden")
+}
 
 const HomeHeaderMenu = () => {
 
     const auth: any = useContext(AuthContext);
 
-    const toggleCartView = () => {
-        document.getElementById('myCartDropdown1')?.classList.toggle("hidden")
+    
+    const navigate = useNavigate();
+
+    const logout = () => {
+        try {
+            localStorage.clear();
+            auth.setLoggedInUser(null);
+            toast.success("Thank you for using Application.")
+            navigate("/login")
+        } catch(err) {
+
+        }
     }
-
-
     // state update 
 
     return (<>
@@ -207,7 +220,7 @@ const HomeHeaderMenu = () => {
                                     </ul>
 
                                     <div className="p-2 text-sm font-medium text-white dark:text-white">
-                                        <a href="#" title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Sign Out </a>
+                                        <a href="#" onClick={logout} title="" className="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-teal-700 dark:hover:bg-gray-600"> Sign Out </a>
                                     </div>
                                 </> : <>
                                     <ul className="p-2 text-start text-sm font-medium text-white dark:text-white">

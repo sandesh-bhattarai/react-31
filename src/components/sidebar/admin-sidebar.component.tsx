@@ -37,7 +37,7 @@ const AdminSidebar = () => {
             label: "Banner"
         },
         {
-            url: '/admin/brands',
+            url: '/admin/brand',
             icon: <FaSmile />,
             label: "Brands"
         },
@@ -67,6 +67,8 @@ const AdminSidebar = () => {
             label: "Transactions"
         },
     ]
+
+    
     return (<>
     
         <aside

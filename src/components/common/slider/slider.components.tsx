@@ -10,7 +10,7 @@ export const SliderImage = ({ image, link, alt = "image" }: SliderImgeProps) => 
     return (<>
         <div className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white">
             {
-                link ? <a href="">
+                link ? <a href={link} target="_banner">
                     {/* <img src={props.image} alt={props.alt} /> */}
                     <img src={image} alt={alt} /></a> : <><img src={image} alt={alt} />
                 </>
